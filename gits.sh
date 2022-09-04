@@ -2,14 +2,14 @@
 read -p "Git Config UserName = " your_username
 your_username=${your_username:-$USER}
 
-git config --global user.name "'$username'"
+read -p "Git Config UserEmail = " your_email
+your_email=${your_email:-$USER}
 
-read -p "Git Config UserEmail = " username
-username=${username:-$USER}
+git config --global user.name "'$your_username'"
 
-echo "Email: "
-read your_email
-ssh-keygen -t ed25519 -C "$your_email"
+git config --global user.email "'$your_email'"
+
+ssh-keygen -t ed25519 -C "'$your_email'"
 
 eval "$(ssh-agent -s)"
 
