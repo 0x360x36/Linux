@@ -18,4 +18,5 @@ ssh-add /home/$USER/.ssh/id_ed25519
 # Your identification has been saved in ~/.ssh/id_ed25519
 # Your public key has been saved in ~/.ssh/id_ed25519.pub
 
+printf "--------------------------------------------------"
 cat /home/$USER/.ssh/id_ed25519.pub 
