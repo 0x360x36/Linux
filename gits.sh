@@ -1,22 +1,27 @@
+#!/bin/bash
 
-read -p "Git Config UserName = " your_username
-your_username=${your_username:-$USER}
+# Prompt the user for their Git username and email
+read -rp "Git Config UserName [$USER]: " git_username
+read -rp "Git Config UserEmail [$USER@$(hostname)]: " git_email
 
-read -p "Git Config UserEmail = " your_email
-your_email=${your_email:-$USER}
+# Use the default username and email if the user did not enter any values
+git_username=${git_username:-$USER}
+git_email=${git_email:-$USER@$(hostname)}
 
-git config --global user.name "'$your_username'"
+# Set the user's Git username and email in the global Git configuration
+git config --global user.name "$git_username"
+git config --global user.email "$git_email"
 
-git config --global user.email "'$your_email'"
+# Generate an Ed25519 SSH key pair if one does not exist
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    ssh-keygen -t ed25519 -C "$git_email"
+fi
 
-ssh-keygen -t ed25519 -C "'$your_email'"
-
+# Add the private key to the SSH agent
 eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
 
-ssh-add /home/$USER/.ssh/id_ed25519
-
-# Your identification has been saved in ~/.ssh/id_ed25519
-# Your public key has been saved in ~/.ssh/id_ed25519.pub
-
-printf "--------------------------------------------------"
-cat /home/$USER/.ssh/id_ed25519.pub 
+# Display the public key
+printf "\nYour public SSH key is:\n\n"
+cat ~/.ssh/id_ed25519.pub
+printf "\n"
