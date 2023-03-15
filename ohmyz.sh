@@ -2,7 +2,7 @@
 
 sudo apt-get update && sudo apt-get upgrade -y
 
-sudo apt-get install -y zsh wget
+sudo apt-get install -y zsh curl
 
 chsh -s $(which zsh)
 
