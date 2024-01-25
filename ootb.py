@@ -14,7 +14,23 @@ def ohmyzsh_install():
     system_updgrade()
     subprocess.run(['sudo', 'apt-get', 'install', '-y', 'zsh', 'curl'])
     subprocess.run(['chsh', '-s', '/bin/zsh'])
-    subprocess.run(['sh', '-c', ' "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'])
+    subprocess.run(['sh', '-c', '"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'])
+    ohmyzsh_theme()
+
+def ohmyzsh_theme():
+    zshrc_path = os.path.expanduser('~/.zshrc')
+    new_zsh_theme = 'bureau'
+    
+    with open(zshrc_path, 'r') as file:
+        lines = file.readlines()
+    for i in range(len(lines)):
+        if 'ZSH_THEME=' in lines[i]:
+            lines[i] = f'ZSH_THEME="{new_zsh_theme}"\n'
+            break
+
+    with open(zshrc_path, 'w') as file:
+        file.writelines(lines)
+    print(f'Se ha cambiado ZSH_THEME a "{new_zsh_theme}" en {zshrc_path}')
 
 def git_config():
     git_username = input(f"Git Config UserName [{getpass.getuser()}]: ") or getpass.getuser()
@@ -46,9 +62,9 @@ def install_utilities():
 
 def main():
     clear_terminal()
-    print("--- OOTB ---\nWelcome to the Out-Of-The-Box (OOTB) installer for my custom settings DevEnv in WSL (Windows Subsystem for Linux)")
+    print("--- OOTB ---\nWelcome to the Out-Of-The-Box (OOTB) installer for my custom DevEnv settings in WSL (Windows Subsystem for Linux)")
     print(
-        f"[1] Install Oh-My-Zsh\n[2] Configure Git (Print Generated Public Key)\n[3] Install programs "
+        f"[1] Install Oh-My-Zsh (Bureau Theme)\n[2] Configure Git (Print Generated Public Key)\n[3] Install programs "
         )
     u_opt = input('-> ')
     if u_opt == '1':
