@@ -35,7 +35,8 @@ def install_base_utilities():
         'neofetch',
         'openssh-server',
         'zsh',
-        'python3-pip'
+        'make',
+        'build-essential'
     ]
     print("Installing the following programs:")
     for p in programs:
@@ -43,17 +44,36 @@ def install_base_utilities():
 
     subprocess.run(['sudo', 'apt-get', 'install', '-y'] + programs )
 
+def pyenv_install():
+    if os.path.exists(os.path.expanduser("~/.pyenv")):
+        subprocess.run(['rm', '-rf', os.path.expanduser("~/.pyenv")])
+    subprocess.run(['curl', 'https://pyenv.run', '-o', 'pyenv-installer.sh'])
+    subprocess.run(['bash', 'pyenv-installer.sh'])
+    subprocess.run(['rm', 'pyenv-installer.sh'])
+
+    #bashrc
+    os.system('echo -e "export PYENV_ROOT="$HOME/.pyenv"\nexport PATH="$PYENV_ROOT/bin:$PATH" >> ~/.bashrc')
+    os.system('echo -e "eval "$(pyenv init --path)"\neval "$(pyenv init -)" >> ~/.bashrc')
+
+    #zshrc
+    os.system('echo -e "export PYENV_ROOT="$HOME/.pyenv"\nexport PATH="$PYENV_ROOT/bin:$PATH" >> ~/.zshrc')
+    os.system('echo -e "eval "$(pyenv init --path)"\neval "$(pyenv init -)" >> ~/.zshrc')
+
+    os.system('exec $SHELL')
+
 def main():
     quitprogr = False
     while quitprogr == False:
         clear_terminal()
         print("--- OOTB ---\nWelcome to the Out-Of-The-Box (OOTB) installer for my custom DevEnv settings in a Debian based distro")
-        print(f"[1] Updgrade System (Update && Upgrade)\n[2] Install Base Utilities ")
+        print(f"[1] Updgrade System (Update && Upgrade)\n[2] Install Base Utilities\n[3] Pyenv Install")
         u_opt = input('-> ')
         if u_opt == '1':
             system_updgrade()
         elif u_opt == '2':
             install_base_utilities()
+        elif u_opt == '3':
+            pyenv_install()
         else:
             quitprogr = True
     sys.exit(0)
